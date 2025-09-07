@@ -20,6 +20,7 @@ const displayLesson = (lessons) => {
 
 // load level function
 const loadLevelWord = (id) => {
+  manageSpinner(true);
   const lessonButtons = document.getElementsByClassName("lesson-btn");
   for (const btn of lessonButtons) {
     btn.classList.remove("active");
@@ -44,6 +45,7 @@ const displayLevelWord = (words) => {
         <h2 class="text-3xl font-bold">নেক্সট Lesson এ যান</h2>
        </div>
          `;
+    manageSpinner(false);
     return;
   }
   for (let word of words) {
@@ -69,6 +71,7 @@ const displayLevelWord = (words) => {
         
         `;
     wordContainer.appendChild(wordCard);
+    manageSpinner(false);
   }
 };
 // load eord details
@@ -84,7 +87,9 @@ const displayWordDetails = (word) => {
   detailsBox.innerHTML = `
     <div class="">
             <h2 class="text-2xl font-bold">
-              ${word.word} (  <i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})
+              ${word.word} (  <i class="fa-solid fa-microphone-lines"></i> :${
+    word.pronunciation
+  })
             </h2>
           </div>
           <div class="">
@@ -97,13 +102,29 @@ const displayWordDetails = (word) => {
           </div>
           <div class="">
             <p class="font-bold">সমার্থক শব্দ গুলো</p>
-            <span class="btn">jhh</span>
-            <span class="btn">jhh</span>
-            <span class="btn">jhh</span>
+            <div class="">
+            ${createElements(word.synonyms)}
+            
+          </div>
           </div>
   
   `;
   document.getElementById("word_modal").showModal();
+};
+
+const createElements = (arr) => {
+  const htmlElements = arr.map((el) => `<span class="btn">${el}</span>`);
+  return htmlElements.join(" ");
+};
+// manage loading
+const manageSpinner = (status) => {
+  if (status == true) {
+    document.getElementById("spin").classList.remove("hidden");
+    document.getElementById("word-container").classList.add("hidden");
+  } else {
+    document.getElementById("word-container").classList.remove("hidden");
+    document.getElementById("spin").classList.add("hidden");
+  }
 };
 
 loadLesson();
