@@ -9,7 +9,7 @@ const displayLesson = (lessons) => {
   for (let lesson of lessons) {
     const btnDiv = document.createElement("div");
     btnDiv.innerHTML = `
-                 <button onclick="loadLevelWord(${lesson.level_no})" class="btn btn-soft btn-primary"
+                 <button id="lesson-btn-${lesson.level_no}" onclick="loadLevelWord(${lesson.level_no})" class="lesson-btn btn btn-soft btn-primary"
                 ><i class="fa-solid fa-book-open mr-2"></i>Lesson-${lesson.level_no}
                 </button>
         
@@ -20,6 +20,12 @@ const displayLesson = (lessons) => {
 
 // load level function
 const loadLevelWord = (id) => {
+  const lessonButtons = document.getElementsByClassName("lesson-btn");
+  for (const btn of lessonButtons) {
+    btn.classList.remove("active");
+  }
+  const clickBtn = document.getElementById(`lesson-btn-${id}`);
+  clickBtn.classList.add("active");
   const url = `https://openapi.programming-hero.com/api/level/${id}`;
   fetch(url)
     .then((res) => res.json())
@@ -43,7 +49,7 @@ const displayLevelWord = (words) => {
   for (let word of words) {
     const wordCard = document.createElement("div");
     wordCard.innerHTML = `
-         <div class="word-card bg-white py-10 px-5 rounded-xl shadow-sm text-center space-y-4">
+         <div class="word-card h-full bg-white py-10 px-5 rounded-xl shadow-sm text-center space-y-4">
             <h2 class="text-2xl font-bold">${
               word.word ? word.word : "শব্দ পাওয়া যায়নি।"
             }</h2>
@@ -54,7 +60,9 @@ const displayLevelWord = (words) => {
       word.pronunciation ? word.pronunciation : "Pronunciation পাওয়া যায়নি।"
     }</div>
             <div class=" flex justify-between items-center">
-                <button class="bg-[#1a91ff1a] rounded-sm p-2"><i class="fa-solid fa-circle-info "></i></button>
+                <button onclick="loadWordDetails(${
+                  word.id
+                })" class="bg-[#1a91ff1a] rounded-sm p-2"><i class="fa-solid fa-circle-info "></i></button>
                 <button class="bg-[#1a91ff1a] rounded-sm p-2"><i class="fa-solid fa-volume-high "></i></button>
             </div>
         </div>
@@ -62,6 +70,40 @@ const displayLevelWord = (words) => {
         `;
     wordContainer.appendChild(wordCard);
   }
+};
+// load eord details
+const loadWordDetails = (id) => {
+  url = `https://openapi.programming-hero.com/api/word/${id}`;
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => displayWordDetails(data.data));
+};
+
+const displayWordDetails = (word) => {
+  const detailsBox = document.getElementById("details-container");
+  detailsBox.innerHTML = `
+    <div class="">
+            <h2 class="text-2xl font-bold">
+              ${word.word} (  <i class="fa-solid fa-microphone-lines"></i> :${word.pronunciation})
+            </h2>
+          </div>
+          <div class="">
+            <p class="font-bold">Meaning</p>
+            <p class="font-bold">${word.meaning}</p>
+          </div>
+          <div class="">
+            <p class="font-bold">Example</p>
+            <p class="font-bold">${word.sentence}</p>
+          </div>
+          <div class="">
+            <p class="font-bold">সমার্থক শব্দ গুলো</p>
+            <span class="btn">jhh</span>
+            <span class="btn">jhh</span>
+            <span class="btn">jhh</span>
+          </div>
+  
+  `;
+  document.getElementById("word_modal").showModal();
 };
 
 loadLesson();
