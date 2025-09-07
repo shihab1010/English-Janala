@@ -74,7 +74,7 @@ const displayLevelWord = (words) => {
     manageSpinner(false);
   }
 };
-// load eord details
+// load word details
 const loadWordDetails = (id) => {
   url = `https://openapi.programming-hero.com/api/word/${id}`;
   fetch(url)
@@ -128,3 +128,24 @@ const manageSpinner = (status) => {
 };
 
 loadLesson();
+
+// search
+document.getElementById("btn-search").addEventListener("click", () => {
+  const lessonButtons = document.getElementsByClassName("lesson-btn");
+  for (const btn of lessonButtons) {
+    btn.classList.remove("active");
+  }
+  const searchValue = document
+    .getElementById("input-search")
+    .value.trim()
+    .toLowerCase();
+  fetch("https://openapi.programming-hero.com/api/words/all")
+    .then((res) => res.json())
+    .then((data) => {
+      const allWords = data.data;
+      const filterWord = allWords.filter((word) =>
+        word.word.toLowerCase().includes(searchValue)
+      );
+      displayLevelWord(filterWord);
+    });
+});
