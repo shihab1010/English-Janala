@@ -65,7 +65,9 @@ const displayLevelWord = (words) => {
                 <button onclick="loadWordDetails(${
                   word.id
                 })" class="bg-[#1a91ff1a] rounded-sm p-2"><i class="fa-solid fa-circle-info "></i></button>
-                <button class="bg-[#1a91ff1a] rounded-sm p-2"><i class="fa-solid fa-volume-high "></i></button>
+                <button onclick="pronounceWord('${
+                  word.word
+                }')" class="bg-[#1a91ff1a] rounded-sm p-2"><i class="fa-solid fa-volume-high "></i></button>
             </div>
         </div>
         
@@ -127,8 +129,6 @@ const manageSpinner = (status) => {
   }
 };
 
-loadLesson();
-
 // search
 document.getElementById("btn-search").addEventListener("click", () => {
   const lessonButtons = document.getElementsByClassName("lesson-btn");
@@ -149,3 +149,11 @@ document.getElementById("btn-search").addEventListener("click", () => {
       displayLevelWord(filterWord);
     });
 });
+// speak words
+function pronounceWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-EN"; // English
+  window.speechSynthesis.speak(utterance);
+}
+
+loadLesson();
